@@ -20,7 +20,7 @@ app.controller("homeCtrl", function($scope, searchSrv, addSrv){
 		console.log(actor);
 		
 		searchSrv.SearchLocal(actor).then(function(data){
-			$scope.movies = data;
+			$scope.movies = data.data.movies;
 		}, function(error){
 			searchSrv.SearchImdb(actor).then(function(data){
 				var html = "";
@@ -31,14 +31,13 @@ app.controller("homeCtrl", function($scope, searchSrv, addSrv){
 				var movies = {};
 				
 				for(var currentMovie=0; currentMovie < data.data[0].filmography.actor.length; currentMovie++){
-					html += data.data[0].filmography.actor[currentMovie].title + "  ";
 					movies[currentMovie] = data.data[0].filmography.actor[currentMovie].title;
 				}
 				
 				doc.movies = movies;
 				
 				addSrv.AddActor(actor, doc).then(function(data){
-					$scope.movies = html;
+					$scope.movies = movies;
 				}, function(error){
 					alert("onverwachte fout bij toevoegen aan DB");
 				});
